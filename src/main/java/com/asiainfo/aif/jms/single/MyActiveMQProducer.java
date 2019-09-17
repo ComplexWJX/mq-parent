@@ -1,4 +1,4 @@
-package com.asiainfo.aif.jms;
+package com.asiainfo.aif.jms.single;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnection;

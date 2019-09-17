@@ -1,22 +1,32 @@
 package com.asiainfo.aif.jms;
 
+import com.asiainfo.aif.jms.cluster.ActiveMQConsumerCluster;
+import com.asiainfo.aif.jms.cluster.ActiveMQProducerCluster;
+import com.asiainfo.aif.jms.single.MyActiveMQConsumer;
+
 public class ActiveMQTest {
     public static void main(String[] args) {
         try {
-            String producerName = "MyActiveMQProducer";
-            String consumerName = "MyActiveMQConsumer";
-//            thread(producerName,new MyActiveMQProducer(),false);
-//            thread(new MyActiveMQProducer(),false);
-//            thread(new MyActiveMQProducer(),false);
+            publish();
             Thread.sleep(1000);
-            thread(consumerName,new MyActiveMQConsumer(),false);
-//            thread(new MyActiveMQConsumer(),false);
-//            thread(new MyActiveMQConsumer(),false);
+            subscriber();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    private static void publish(){
+        String producerName = "MyActiveMQProducer";
+        //thread(producerName,new MyActiveMQProducer(),false);
+        thread(producerName,new ActiveMQProducerCluster(),false);
+    }
+
+    private static void subscriber(){
+        String consumerName = "MyActiveMQConsumer";
+        //thread(consumerName,new MyActiveMQConsumer(),false);
+        thread(consumerName,new ActiveMQConsumerCluster(),false);
     }
 
     public static void thread(String threadName,Runnable runnable, boolean daemon) {
