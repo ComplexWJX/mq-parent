@@ -1,4 +1,4 @@
-package com.asiainfo.aif.jms.cluster;
+package com.asiainfo.aif.jms.activeMQ.cluster;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnection;
@@ -37,7 +37,7 @@ public class ActiveMQProducerCluster implements Runnable{
             producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
             // Create a messages
-            String msg = "hello,boy.This is a helloWorld of ActiveMQ!";
+            String msg = "hello,boy.This is a helloWorld of activeMQ!";
             TextMessage textMessage = session.createTextMessage(msg);
 
             // Tell the producer to send the message
