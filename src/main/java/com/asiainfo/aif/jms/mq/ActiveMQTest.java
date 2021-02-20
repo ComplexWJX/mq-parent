@@ -1,8 +1,10 @@
-package com.asiainfo.aif.jms.activeMQ;
+package com.asiainfo.aif.jms.mq;
 
-import com.asiainfo.aif.jms.activeMQ.cluster.ActiveMQConsumerCluster;
-import com.asiainfo.aif.jms.activeMQ.cluster.ActiveMQProducerCluster;
-import com.asiainfo.aif.jms.activeMQ.single.MyActiveMQConsumer;
+import com.asiainfo.aif.jms.mq.cluster.ActiveMQConsumerCluster;
+import com.asiainfo.aif.jms.mq.cluster.ActiveMQProducerCluster;
+import com.asiainfo.aif.jms.mq.message.MessageBean;
+import com.asiainfo.aif.jms.mq.single.MyActiveMQConsumer;
+import com.asiainfo.aif.jms.mq.single.MyActiveMQProducer;
 
 public class ActiveMQTest {
     public static void main(String[] args) {
@@ -19,17 +21,21 @@ public class ActiveMQTest {
 
     private static void publish(){
         String producerName = "MyActiveMQProducer";
-        //thread(producerName,new MyActiveMQProducer(),false);
+        MessageBean messageBean = new MessageBean();
+        messageBean.setCode("1001");
+        messageBean.setMessageId(1001L);
+        messageBean.setText("This is a test mq message!");
+//        thread(producerName,new MyActiveMQProducer(messageBean),false);
         thread(producerName,new ActiveMQProducerCluster(),false);
     }
 
     private static void subscriber(){
         String consumerName = "MyActiveMQConsumer";
-        //thread(consumerName,new MyActiveMQConsumer(),false);
+//        thread(consumerName,new MyActiveMQConsumer(),false);
         thread(consumerName,new ActiveMQConsumerCluster(),false);
     }
 
-    public static void thread(String threadName,Runnable runnable, boolean daemon) {
+    private static void thread(String threadName,Runnable runnable, boolean daemon) {
         Thread brokerThread = new Thread(runnable,threadName);
         brokerThread.setDaemon(daemon);
         brokerThread.start();

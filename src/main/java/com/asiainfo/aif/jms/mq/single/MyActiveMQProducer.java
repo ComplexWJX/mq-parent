@@ -1,5 +1,6 @@
-package com.asiainfo.aif.jms.activeMQ.single;
+package com.asiainfo.aif.jms.mq.single;
 
+import com.asiainfo.aif.jms.mq.message.MessageBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -13,6 +14,12 @@ public class MyActiveMQProducer implements Runnable{
     private final static String DEFAULT_PASSWORD = ActiveMQConnection.DEFAULT_PASSWORD;
     private final static String DEFAULT_BROKER_URL = ActiveMQConnection.DEFAULT_BROKER_URL;
 
+    private MessageBean objectMessage;
+
+    public MyActiveMQProducer(MessageBean message) {
+        this.objectMessage = message;
+    }
+
     @Override
     public void run() {
         try {
@@ -20,10 +27,10 @@ public class MyActiveMQProducer implements Runnable{
              * ActiveMQ的session负责创建队列queue，生产者producer，消息message
              */
 
-            // Create a ConnectionFactory
-            ActiveMQConnectionFactory activeMQConnectionFactory = new ActiveMQConnectionFactory(DEFAULT_USER,DEFAULT_PASSWORD,DEFAULT_BROKER_URL);
+            // Create a ConnectionFactory jms规范
+            ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(DEFAULT_USER,DEFAULT_PASSWORD,DEFAULT_BROKER_URL);
             // Create a Connection
-            Connection connection = activeMQConnectionFactory.createConnection();
+            Connection connection = connectionFactory.createConnection();
             connection.start();
             // Create a Session
             Session session = connection.createSession(false,Session.AUTO_ACKNOWLEDGE);
@@ -36,8 +43,11 @@ public class MyActiveMQProducer implements Runnable{
             producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
             // Create a messages
-            String msg = "hello,boy.This is a helloWorld of activeMQ!";
+            String msg = "hello,boy.This is a helloWorld of mq!";
             TextMessage textMessage = session.createTextMessage(msg);
+            ObjectMessage objectMessage = session.createObjectMessage();
+            producer.send(objectMessage);
+
 
             // Tell the producer to send the message
             log.info("textMessage:"+textMessage);

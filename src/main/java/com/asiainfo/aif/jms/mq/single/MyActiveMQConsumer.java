@@ -1,5 +1,6 @@
-package com.asiainfo.aif.jms.activeMQ.single;
+package com.asiainfo.aif.jms.mq.single;
 
+import com.asiainfo.aif.jms.mq.message.MessageBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -38,12 +39,15 @@ public class MyActiveMQConsumer implements Runnable, ExceptionListener {
             consumer = session.createConsumer(topic);
 
             //consume the message
-            while (true){
+            while (!Thread.currentThread().isInterrupted()){
                 Message message = consumer.receive(3000);
-                if (message!=null && message instanceof TextMessage) {
+                if (message instanceof TextMessage) {
                     TextMessage textMessage = (TextMessage) message;
                     String text = textMessage.getText();
                     System.out.println("Received: " + text);
+                }else if(message instanceof MessageBean){
+                    MessageBean messageBean = (MessageBean) message;
+                    log.info(messageBean.toString());
                 }
                 log.info("receive message {}",message);
             }
