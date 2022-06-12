@@ -1,10 +1,15 @@
-package com.asiainfo.aif.jms.mq.cluster;
+package aif.jms.mq.cluster;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
-import javax.jms.*;
+import javax.jms.Connection;
+import javax.jms.DeliveryMode;
+import javax.jms.Destination;
+import javax.jms.MessageProducer;
+import javax.jms.Session;
+import javax.jms.TextMessage;
 
 @Slf4j
 public class ActiveMQProducerCluster implements Runnable{

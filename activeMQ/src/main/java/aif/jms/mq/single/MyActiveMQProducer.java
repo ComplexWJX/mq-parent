@@ -1,11 +1,18 @@
-package com.asiainfo.aif.jms.mq.single;
+package aif.jms.mq.single;
 
-import com.asiainfo.aif.jms.mq.message.MessageBean;
+import aif.jms.mq.message.MessageBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
-import javax.jms.*;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.DeliveryMode;
+import javax.jms.Destination;
+import javax.jms.MessageProducer;
+import javax.jms.ObjectMessage;
+import javax.jms.Session;
+import javax.jms.TextMessage;
 
 @Slf4j
 public class MyActiveMQProducer implements Runnable{

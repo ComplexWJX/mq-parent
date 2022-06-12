@@ -1,4 +1,4 @@
-package com.asiainfo.aif.jms;
+package com.asiainfo.aif;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
