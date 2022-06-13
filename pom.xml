@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <modules>
         <module>kafka</module>
-        <module>activeMQ</module>
+        <module>activemq</module>
         <module>rocketmq</module>
     </modules>
     <parent>
