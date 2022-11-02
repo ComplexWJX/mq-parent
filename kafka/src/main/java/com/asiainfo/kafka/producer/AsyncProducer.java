@@ -28,7 +28,7 @@ public class AsyncProducer {
     public void syncSend(@PathVariable("msg") String msg) throws Exception {
         Message message = new Message();
         message.setMessage(msg);
-        ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send("order", 0,"myKey",   JSON.toJSONString(message));
+        ListenableFuture<SendResult<String, Object>> future = kafkaTemplate.send("order", 0,"myKey",  JSON.toJSONString(message));
         //注意，可以设置等待时间，超出后，不再等候结果
 //        SendResult<String, Object> result = future.get(3, TimeUnit.SECONDS);
 //        logger.info("send result:{}",result.getProducerRecord().value());

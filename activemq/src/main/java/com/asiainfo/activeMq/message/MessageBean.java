@@ -1,4 +1,4 @@
-package aif.jms.mq.message;
+package com.asiainfo.activeMq.message;
 
 import lombok.Data;
 

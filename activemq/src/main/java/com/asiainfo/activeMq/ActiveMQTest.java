@@ -1,8 +1,9 @@
-package aif.jms.mq;
+package com.asiainfo.activeMq;
 
-import com.asiainfo.aif.jms.mq.cluster.ActiveMQConsumerCluster;
-import com.asiainfo.aif.jms.mq.cluster.ActiveMQProducerCluster;
-import com.asiainfo.aif.jms.mq.message.MessageBean;
+
+import com.asiainfo.activeMq.cluster.ActiveMQConsumerCluster;
+import com.asiainfo.activeMq.cluster.ActiveMQProducerCluster;
+import com.asiainfo.activeMq.message.MessageBean;
 
 public class ActiveMQTest {
     public static void main(String[] args) {

@@ -1,6 +1,6 @@
-package aif.jms.mq.single;
+package com.asiainfo.activeMq.single;
 
-import aif.jms.mq.message.MessageBean;
+import com.asiainfo.activeMq.message.MessageBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;

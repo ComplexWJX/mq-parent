@@ -1,5 +1,6 @@
-package aif.jms.mq.cluster;
+package com.asiainfo.activeMq.single;
 
+import com.asiainfo.activeMq.message.MessageBean;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -15,12 +16,11 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 @Slf4j
-public class ActiveMQConsumerCluster implements Runnable, ExceptionListener {
+public class MyActiveMQConsumer implements Runnable, ExceptionListener {
 
     private final static String DEFAULT_USER = ActiveMQConnection.DEFAULT_USER;
     private final static String DEFAULT_PASSWORD = ActiveMQConnection.DEFAULT_PASSWORD;
     private final static String DEFAULT_BROKER_URL = ActiveMQConnection.DEFAULT_BROKER_URL;
-    private final static String CLUSTER_URL = "failover:(tcp://127.0.0.1:61616,tcp://127.0.0.1:61617,tcp://127.0.0.1:61618)?Randomize=false";
 
     Connection connection;
 
@@ -32,7 +32,7 @@ public class ActiveMQConsumerCluster implements Runnable, ExceptionListener {
     public void run() {
         try {
             //create connection
-            ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(DEFAULT_USER,DEFAULT_PASSWORD,CLUSTER_URL);
+            ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(DEFAULT_USER,DEFAULT_PASSWORD,DEFAULT_BROKER_URL);
             connection = connectionFactory.createConnection();
             connection.start();
             connection.setExceptionListener(this);
@@ -42,18 +42,21 @@ public class ActiveMQConsumerCluster implements Runnable, ExceptionListener {
 
             //create queue
 //            Topic topic = session.createTopic("TEST.QUEUE");
-            Destination topic = session.createQueue("CLUSTER.QUEUE");
+            Destination topic = session.createQueue("TEST");
 
             //create consumer
             consumer = session.createConsumer(topic);
 
             //consume the message
-            while (true){
+            while (!Thread.currentThread().isInterrupted()){
                 Message message = consumer.receive(3000);
-                if (message!=null && message instanceof TextMessage) {
+                if (message instanceof TextMessage) {
                     TextMessage textMessage = (TextMessage) message;
                     String text = textMessage.getText();
                     System.out.println("Received: " + text);
+                }else if(message instanceof MessageBean){
+                    MessageBean messageBean = (MessageBean) message;
+                    log.info(messageBean.toString());
                 }
                 log.info("receive message {}",message);
             }

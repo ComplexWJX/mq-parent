@@ -1,4 +1,4 @@
-package aif.jms.mq.cluster;
+package com.asiainfo.activeMq.cluster;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnection;
