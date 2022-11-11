@@ -12,13 +12,13 @@ import org.springframework.stereotype.Component;
 public class KafkaConsumer {
     private final static Logger logger = LoggerFactory.getLogger(KafkaConsumer.class);
 
-    @KafkaListener(topics = {"order"})
+    //@KafkaListener(topics = {"order"})
     public void listenMessageOnTopic(ConsumerRecord<?, ?> consumerRecord) {
         Object value = consumerRecord.value();
         logger.info("receive message from topic {}, value is {}", consumerRecord.topic(), value.toString());
     }
 
-    @KafkaListener(topicPartitions = {@TopicPartition(topic = "order", partitionOffsets = {@PartitionOffset(partition = "1", initialOffset = "0", relativeToCurrent = "true")})})
+    //@KafkaListener(topicPartitions = {@TopicPartition(topic = "order", partitionOffsets = {@PartitionOffset(partition = "1", initialOffset = "0", relativeToCurrent = "true")})})
     public void listenMessageOnPartition(ConsumerRecord<?, ?> consumerRecord) {
         Object value = consumerRecord.value();
         logger.info("receive message from partition {} - topic {}, value is {}", consumerRecord.partition(), consumerRecord.topic(), value.toString());
