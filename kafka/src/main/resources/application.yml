@@ -16,7 +16,7 @@ spring:
 
     consumer: # consumer消费者
       group-id: javagroup # 默认的消费组ID
-      enable-auto-commit: true # 是否自动提交offset
+      enable-auto-commit: false # 是否自动提交offset
       auto-commit-interval: 100  # 提交offset延时(接收到消息后多久提交offset)
 
       # earliest:当各分区下有已提交的offset时，从提交的offset开始消费；无提交的offset时，从头开始消费
@@ -26,5 +26,8 @@ spring:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       #      value-deserializer: com.itheima.demo.config.MyDeserializer
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+    listener:
+      ack-mode: manual
 server:
   port: 8088
