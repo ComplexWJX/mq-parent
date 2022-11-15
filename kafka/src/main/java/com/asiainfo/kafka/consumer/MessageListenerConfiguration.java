@@ -5,6 +5,7 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -22,9 +23,12 @@ import java.util.Properties;
  * @author rukawa
  * Created on 2022/11/14 11:33 by rukawa
  */
-@Configuration
+//@Configuration
 public class MessageListenerConfiguration {
     private final static Logger logger = LoggerFactory.getLogger(KafkaListenerConsumer.class);
+
+    @Autowired
+    private ConsumerFactory<String, Object> consumerFactory;
 
     @Bean
     public KafkaMessageListenerContainer<String, Object> messageListenerContainer() {
@@ -36,7 +40,7 @@ public class MessageListenerConfiguration {
                 logger.info("receive message from topic {}, value is {}", consumerRecord.topic(), consumerRecord.value().toString());
             }
         });
-        return new KafkaMessageListenerContainer<>(consumerFactory(), containerProperties);
+        return new KafkaMessageListenerContainer<>(consumerFactory, containerProperties);
     }
 
     @Bean
