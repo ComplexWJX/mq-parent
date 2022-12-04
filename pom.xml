@@ -16,7 +16,7 @@
     <groupId>com.asiainfo</groupId>
     <artifactId>mq-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>aif</name>
+    <name>mq-parent</name>
     <description>research on mq</description>
     <packaging>pom</packaging>
 
