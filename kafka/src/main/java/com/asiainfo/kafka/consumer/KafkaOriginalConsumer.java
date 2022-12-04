@@ -90,7 +90,7 @@ public class KafkaOriginalConsumer {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
-                        logger.error("consumer thread is interrupted..", e);
+                        logger.warn("consumer thread is interrupted..", e);
                     }
                 }
             } catch (Exception e) {
@@ -114,7 +114,7 @@ public class KafkaOriginalConsumer {
         // jvm退出之前执行
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             kafkaConsumer.wakeup();
-            logger.info("consumer is closed gracefully.");
+            logger.warn("consumer is closed gracefully.");
         }));
 
     }
