@@ -1,5 +1,6 @@
 package com.asiainfo.rocketmq.consumer;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -16,19 +17,20 @@ import java.util.List;
  * @author rukawa
  * Created on 2023/01/13 9:54 by rukawa
  */
-public class RocketMqConsumer {
+@Slf4j
+public class RocketMqPushConsumer {
     DefaultMQPushConsumer mqPushConsumer;
 
-    public RocketMqConsumer() throws MQClientException {
+    public RocketMqPushConsumer() throws MQClientException {
         mqPushConsumer = new DefaultMQPushConsumer();
         mqPushConsumer.setNamesrvAddr("localhost:9876");
         mqPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         mqPushConsumer.setConsumerGroup("my-consumer-group");
-        mqPushConsumer.subscribe("rocket_test", "");
+        mqPushConsumer.subscribe("test_topic", "");
         mqPushConsumer.registerMessageListener(new MessageListenerConcurrently() {
             @Override
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
-                String result = receive(msgs, context);
+                String result = onReceive(msgs, context);
                 System.out.println(result);
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
@@ -36,7 +38,7 @@ public class RocketMqConsumer {
         mqPushConsumer.start();
     }
 
-    public String receive(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
+    public String onReceive(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
         StringBuilder msgSb = new StringBuilder();
         if (!msgs.isEmpty()) {
             for (MessageExt msg : msgs) {
@@ -48,7 +50,7 @@ public class RocketMqConsumer {
 
     public static void main(String[] args) {
         try {
-            new RocketMqConsumer();
+            new RocketMqPushConsumer();
         } catch (MQClientException e) {
             e.printStackTrace();
         }
