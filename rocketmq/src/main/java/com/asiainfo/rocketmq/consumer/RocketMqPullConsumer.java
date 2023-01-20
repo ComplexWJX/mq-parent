@@ -50,6 +50,8 @@ public class RocketMqPullConsumer {
             for (MessageQueue messageQueue : messageQueues) {
                 log.info("fetch messageQueue from broker : {}, queue id is: {}", messageQueue.getBrokerName(), messageQueue.getQueueId());
             }
+
+            mqPullConsumer.shutdown();
         } catch (MQClientException e) {
             e.printStackTrace();
         }
