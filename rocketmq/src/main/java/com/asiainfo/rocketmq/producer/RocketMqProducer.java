@@ -23,34 +23,38 @@ public class RocketMqProducer {
 
     DefaultMQProducer defaultMQProducer = new DefaultMQProducer();
 
-    public RocketMqProducer() throws MQClientException {
+    public RocketMqProducer() {
         defaultMQProducer.setNamesrvAddr("10.62.10.162:9876");
         defaultMQProducer.setRetryTimesWhenSendFailed(1);
         defaultMQProducer.setProducerGroup("myGroup");
         defaultMQProducer.setSendMsgTimeout(15000);
         defaultMQProducer.setInstanceName("mq-producer1");
-        defaultMQProducer.start();
+        try {
+            defaultMQProducer.start();
+        } catch (MQClientException e) {
+            e.printStackTrace();
+        }
     }
 
-    public String sendSync() {
+    public String sendSync(String topic, String msg) {
         SendResult sendResult = null;
         Message message = new Message();
-        message.setTopic("test_topic_1");
-        for (int i = 0; i < 5; i++) {
-            message.setBody(("order" + System.currentTimeMillis()).getBytes());
+        message.setTopic(topic);
+//        for (int i = 0; i < 5; i++) {
+            message.setBody(msg.getBytes());
 
             try {
                 sendResult = defaultMQProducer.send(message);
             } catch (MQClientException | RemotingException | InterruptedException | MQBrokerException e) {
                 log.error("send message to rocket server failed", e);
             }
-        }
-        try {
-            Thread.sleep(5 * 1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        defaultMQProducer.shutdown();
+//        }
+//        try {
+//            Thread.sleep(5 * 1000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+        //defaultMQProducer.shutdown();
         return sendResult != null ? sendResult.getSendStatus().name() : "failed";
     }
 
@@ -89,12 +93,7 @@ public class RocketMqProducer {
     }
 
     public static void main(String[] args) {
-        try {
-//            String result = new RocketMqProducer().sendSync();
-            String result = new RocketMqProducer().sendAsync();
-            System.out.println(result);
-        } catch (MQClientException e) {
-            e.printStackTrace();
-        }
+        //            String result = new RocketMqProducer().sendSync();
+        String result = new RocketMqProducer().sendAsync();
     }
 }

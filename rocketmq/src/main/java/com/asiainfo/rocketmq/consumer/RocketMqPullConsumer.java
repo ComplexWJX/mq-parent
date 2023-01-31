@@ -22,13 +22,18 @@ public class RocketMqPullConsumer {
 
     DefaultLitePullConsumer mqPullConsumer;
 
-    public RocketMqPullConsumer() throws MQClientException {
+    public RocketMqPullConsumer() {
         mqPullConsumer = new DefaultLitePullConsumer();
         mqPullConsumer.setNamesrvAddr("localhost:9876");
         mqPullConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         mqPullConsumer.setConsumerGroup("my-consumer-group");
-        mqPullConsumer.subscribe("test_topic", "");
-        mqPullConsumer.start();
+        try {
+            mqPullConsumer.subscribe("bdReqtest", "");
+            mqPullConsumer.start();
+        } catch (MQClientException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public String pollMessage(String topic) {
@@ -51,7 +56,7 @@ public class RocketMqPullConsumer {
                 log.info("fetch messageQueue from broker : {}, queue id is: {}", messageQueue.getBrokerName(), messageQueue.getQueueId());
             }
 
-            mqPullConsumer.shutdown();
+            //mqPullConsumer.shutdown();
         } catch (MQClientException e) {
             e.printStackTrace();
         }
@@ -60,11 +65,7 @@ public class RocketMqPullConsumer {
     }
 
     public static void main(String[] args) {
-        try {
-            String result = new RocketMqPullConsumer().pollMessage("test_topic_async");
-            System.out.println(result);
-        } catch (MQClientException e) {
-            e.printStackTrace();
-        }
+        String result = new RocketMqPullConsumer().pollMessage("test_topic_async");
+        System.out.println(result);
     }
 }

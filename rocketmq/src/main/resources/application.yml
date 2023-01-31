@@ -1,0 +1,7 @@
+
+spring:
+  application:
+    name: rocketmq-server
+
+server:
+  port: 8088

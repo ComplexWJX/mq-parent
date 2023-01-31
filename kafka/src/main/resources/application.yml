@@ -1,7 +1,7 @@
 
 spring:
   application:
-    name: demo
+    name: kafka-server
 
   kafka:
     bootstrap-servers: localhost:9092 #52.82.98.209:10903,52.82.98.209:10904
