@@ -2,12 +2,16 @@ package com.asiainfo.rocketmq.consumer;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.DefaultLitePullConsumer;
+import org.apache.rocketmq.client.consumer.MessageSelector;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.message.MessageQueue;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -39,21 +43,22 @@ public class RocketMqPullConsumer {
     public String pollMessage(String topic) {
         StringBuilder msgSb = new StringBuilder();
         try {
-            List<MessageExt> messageExtList = mqPullConsumer.poll(3000);
-            while (!messageExtList.isEmpty()) {
-                messageExtList = mqPullConsumer.poll(3000);
-                for (MessageExt messageExt : messageExtList) {
-                    String topicName = messageExt.getTopic();
-                    String msgContent = new String(messageExt.getBody());
-                    log.info("fetch msg from topic : {}, msg is: {}", topicName, msgContent);
-                    msgSb.append(msgContent).append(",");
-                }
-                mqPullConsumer.commitSync();
-            }
-
             Collection<MessageQueue> messageQueues = mqPullConsumer.fetchMessageQueues(topic);
             for (MessageQueue messageQueue : messageQueues) {
                 log.info("fetch messageQueue from broker : {}, queue id is: {}", messageQueue.getBrokerName(), messageQueue.getQueueId());
+
+                mqPullConsumer.seek(messageQueue, 1);
+                List<MessageExt> messageExtList = mqPullConsumer.poll(3000);
+                if (!messageExtList.isEmpty()) {
+                    messageExtList = mqPullConsumer.poll(3000);
+                    for (MessageExt messageExt : messageExtList) {
+                        String topicName = messageExt.getTopic();
+                        String msgContent = new String(messageExt.getBody());
+                        log.info("fetch msg from topic : {}, msg is: {}", topicName, msgContent);
+                        msgSb.append(msgContent).append(",");
+                    }
+                    mqPullConsumer.commitSync();
+                }
             }
 
             //mqPullConsumer.shutdown();
