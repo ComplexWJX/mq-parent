@@ -2,16 +2,12 @@ package com.asiainfo.rocketmq.consumer;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.client.consumer.DefaultLitePullConsumer;
-import org.apache.rocketmq.client.consumer.MessageSelector;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.message.MessageQueue;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -47,10 +43,10 @@ public class RocketMqPullConsumer {
             for (MessageQueue messageQueue : messageQueues) {
                 log.info("fetch messageQueue from broker : {}, queue id is: {}", messageQueue.getBrokerName(), messageQueue.getQueueId());
 
-                mqPullConsumer.seek(messageQueue, 1);
-                List<MessageExt> messageExtList = mqPullConsumer.poll(3000);
+                //mqPullConsumer.seek(messageQueue, 1);
+                // ”长轮询“：pull方式不会立即返回结果，broker会暂时hold住请求，维持连接一段时间
+                List<MessageExt> messageExtList = mqPullConsumer.poll(500);
                 if (!messageExtList.isEmpty()) {
-                    messageExtList = mqPullConsumer.poll(3000);
                     for (MessageExt messageExt : messageExtList) {
                         String topicName = messageExt.getTopic();
                         String msgContent = new String(messageExt.getBody());

@@ -35,12 +35,13 @@ public class MsgAccess {
     @PostMapping("/rocket/sendMsg")
     @ResponseBody
     public String syncSend(@RequestParam("topic") String topic, @RequestBody String msg) throws Exception {
-        String result = rocketMqProducer.sendSync(topic, msg);
+        //String result = rocketMqProducer.sendSync(topic, msg);
+        String result = rocketMqProducer.sendToSpecifiedQueue(topic, msg);
         return result;
     }
 
     /**
-     * 同步发送
+     * 拉取消息
      * @param topic 消息主题
      * @throws Exception
      */
