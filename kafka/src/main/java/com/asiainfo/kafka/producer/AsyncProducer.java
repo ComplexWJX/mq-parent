@@ -49,15 +49,4 @@ public class AsyncProducer {
         return "success," + result.getProducerRecord().value();
     }
 
-    public void createTopic(@RequestParam String topicName, @RequestParam String partition) {
-        Properties properties = new Properties();
-        properties.setProperty("bootstrap.servers", "localhost:9092");
-        // todo 设置发送主题、分区
-        properties.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        properties.setProperty("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        KafkaProducer<String, Object> kafkaProducer = new KafkaProducer<>(properties);
-        ProducerRecord<String, Object> record = new ProducerRecord<>("order", "order1001");
-        kafkaProducer.send(record);
-    }
-
 }
