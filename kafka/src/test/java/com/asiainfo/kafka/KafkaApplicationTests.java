@@ -1,6 +1,7 @@
 package com.asiainfo.kafka;
 
 import com.asiainfo.kafka.admin.AdminClientTool;
+import com.asiainfo.kafka.consumer.KafkaOriginalConsumer;
 import org.apache.kafka.clients.admin.TopicDescription;
 import org.apache.kafka.clients.admin.TopicListing;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -24,7 +25,10 @@ import java.util.Properties;
 class KafkaApplicationTests {
 
     public static void main(String[] args) {
-        new KafkaApplicationTests().testListTopic();
+//        KafkaApplicationTests tests = new KafkaApplicationTests();
+//        tests.testDescribeTopics();
+        new KafkaOriginalConsumer().start();
+//        new KafkaOriginalConsumer().start();
     }
 
     @Test
@@ -33,12 +37,12 @@ class KafkaApplicationTests {
 
     @Test
     public void testCreateTopic() {
-        AdminClientTool.createTopic("my-partition-topic1", 3, (short) 1);
+        AdminClientTool.createTopic("order", 3, (short) 3);
     }
 
     @Test
     public void testDeleteTopic() {
-        AdminClientTool.deleteTopic("my-partition-topic1");
+        AdminClientTool.deleteTopic("order");
     }
 
     @Test
@@ -48,8 +52,8 @@ class KafkaApplicationTests {
     }
 
     @Test
-    public void testDescribleTopics() {
-        Map<String, TopicDescription> descriptionMap = AdminClientTool.describleTopics("my-partition-topic");
+    public void testDescribeTopics() {
+        Map<String, TopicDescription> descriptionMap = AdminClientTool.describeTopics("order");
         System.out.println(descriptionMap);
     }
 

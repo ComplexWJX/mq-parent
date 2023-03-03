@@ -23,9 +23,11 @@ import java.util.concurrent.ExecutionException;
  */
 public class AdminClientTool {
 
+    public final static String BOOTSTRAP_SERVERS = "localhost:9092,localhost:9093,localhost:9094";
+
     public static void createTopic(String topicName, int partition, short replicationFactors) {
         Properties properties = new Properties();
-        properties.setProperty("bootstrap.servers", "localhost:9092");
+        properties.setProperty("bootstrap.servers", BOOTSTRAP_SERVERS);
         // 设置发送主题、分区
 
         NewTopic newTopic = new NewTopic(topicName, partition, replicationFactors);
@@ -44,7 +46,7 @@ public class AdminClientTool {
 
     public static void deleteTopic(String topicName) {
         Properties properties = new Properties();
-        properties.setProperty("bootstrap.servers", "localhost:9092");
+        properties.setProperty("bootstrap.servers", BOOTSTRAP_SERVERS);
 
         AdminClient adminClient = AdminClient.create(properties);
 
@@ -69,7 +71,7 @@ public class AdminClientTool {
 
     public static Collection<TopicListing> listTopics() {
         Properties properties = new Properties();
-        properties.setProperty("bootstrap.servers", "localhost:9092");
+        properties.setProperty("bootstrap.servers", BOOTSTRAP_SERVERS);
 
         AdminClient adminClient = AdminClient.create(properties);
 
@@ -82,9 +84,9 @@ public class AdminClientTool {
         }
     }
 
-    public static Map<String, TopicDescription> describleTopics(String topicName) {
+    public static Map<String, TopicDescription> describeTopics(String topicName) {
         Properties properties = new Properties();
-        properties.setProperty("bootstrap.servers", "localhost:9092");
+        properties.setProperty("bootstrap.servers", BOOTSTRAP_SERVERS);
 
         AdminClient adminClient = AdminClient.create(properties);
 
