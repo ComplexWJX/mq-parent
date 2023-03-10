@@ -31,7 +31,7 @@ public class KafkaOriginalConsumer {
 
     KafkaConsumer<String, Object> kafkaConsumer;
 
-    public KafkaOriginalConsumer() {
+    public KafkaOriginalConsumer(String groupId) {
         Properties properties = new Properties();
 
         properties.setProperty("bootstrap.servers", BOOTSTRAP_SERVERS);
@@ -41,7 +41,7 @@ public class KafkaOriginalConsumer {
         * 客户端正在处理的偏移量大于分区最后提交的offset，则出现消息丢失，反之则出现重复消费
         * */
         // 消费组，topic一个partition只能被消费组中一个消费者消费
-        properties.setProperty("group.id", "MyGroup");
+        properties.setProperty("group.id", groupId);
         properties.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
         properties.setProperty("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
 
@@ -64,16 +64,8 @@ public class KafkaOriginalConsumer {
 
         if (null == properties.get(ConsumerConfig.GROUP_ID_CONFIG)) {
             subscribe();
-        } else {
-            assign();
         }
 
-    }
-
-    public void start() {
-        pollMsg();
-
-        shutdownGracefully();
     }
 
     public void subscribe() {
@@ -97,10 +89,10 @@ public class KafkaOriginalConsumer {
         });
     }
 
-    public void assign() {
+    public void assign(String topic, int partitionNum) {
         // 自我分配主题和分区，有新的分区加入，consumer不会读取到新分区的消息，除非调用partitionsFor读取新的分区信息
         Collection<TopicPartition> topicPartitions = new ArrayList<>();
-        TopicPartition partition = new TopicPartition("order", 0);
+        TopicPartition partition = new TopicPartition(topic, partitionNum);
         topicPartitions.add(partition);
         // 指定偏移量
         //kafkaConsumer.seekToEnd(topicPartitions);
@@ -137,6 +129,7 @@ public class KafkaOriginalConsumer {
                 logger.error("some error occurred", e);
             } finally {
                 kafkaConsumer.close(Duration.ofMillis(500));
+                shutdownGracefully();
             }
         });
 

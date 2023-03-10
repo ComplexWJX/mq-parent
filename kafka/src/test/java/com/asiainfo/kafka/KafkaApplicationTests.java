@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -27,8 +26,9 @@ class KafkaApplicationTests {
     public static void main(String[] args) {
 //        KafkaApplicationTests tests = new KafkaApplicationTests();
 //        tests.testDescribeTopics();
-        new KafkaOriginalConsumer().start();
-//        new KafkaOriginalConsumer().start();
+        KafkaOriginalConsumer consumer = new KafkaOriginalConsumer("MyGroup");
+        consumer.assign("order", 0);
+        consumer.pollMsg();
     }
 
     @Test
