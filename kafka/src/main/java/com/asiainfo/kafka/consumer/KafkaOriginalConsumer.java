@@ -1,14 +1,12 @@
 package com.asiainfo.kafka.consumer;
 
-import com.asiainfo.kafka.producer.AsyncProducer;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRebalanceListener;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.TopicPartition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -23,9 +21,8 @@ import java.util.Properties;
  * @author rukawa
  * Created on 2022/11/04 11:34 by rukawa
  */
+@Slf4j
 public class KafkaOriginalConsumer {
-
-    private final static Logger logger = LoggerFactory.getLogger(AsyncProducer.class);
 
     public final static String BOOTSTRAP_SERVERS = "localhost:9092,localhost:9093,localhost:9094";
 
@@ -71,16 +68,16 @@ public class KafkaOriginalConsumer {
             public void onPartitionsRevoked(Collection<TopicPartition> partitions) {
                 // 发生在分区再均衡开始之前，消费者停止读取消息后。持久化分区和偏移量信息
                 // storeTopicPartitionsInDB
-                logger.info("execute before partitionsRevoked.");
-                logger.info(partitions.toString());
+                log.info("execute before partitionsRevoked.");
+                log.info(partitions.toString());
             }
 
             @Override
             public void onPartitionsAssigned(Collection<TopicPartition> partitions) {
                 // 发生在分区再均衡完成之后，消费者开始读取消息前。从持久层恢复分区和偏移量信息
                 // getTopicPartitionsFromDB
-                logger.info("execute after partitionsAssigned.");
-                logger.info(partitions.toString());
+                log.info("execute after partitionsAssigned.");
+                log.info(partitions.toString());
             }
         });
     }
@@ -90,9 +87,9 @@ public class KafkaOriginalConsumer {
         Collection<TopicPartition> topicPartitions = new ArrayList<>();
         TopicPartition partition = new TopicPartition(topic, partitionNum);
         topicPartitions.add(partition);
-        // 指定偏移量
-        //kafkaConsumer.seekToEnd(topicPartitions);
         kafkaConsumer.assign(topicPartitions);
+        // 指定偏移量
+        kafkaConsumer.seek(partition, 0);
     }
 
     public void pollMsg() {
@@ -102,14 +99,14 @@ public class KafkaOriginalConsumer {
 //                TopicPartition partition = new TopicPartition("order", 0);
                 while (!Thread.interrupted()) {
 //                    long position = kafkaConsumer.position(partition);
-//                    logger.info("position now is : {}", position);
+//                    log.info("position now is : {}", position);
                     ConsumerRecords<String, Object> consumerRecords = kafkaConsumer.poll(Duration.of(500, ChronoUnit.MILLIS));
 
                     if (!consumerRecords.isEmpty()) {
                         for (ConsumerRecord<String, Object> record : consumerRecords) {
                             // todo
-                            logger.info("msg offset:{}", record.offset());
-                            logger.info("Thread {} receive msg, the value is :{}", Thread.currentThread().getName(), record.value());
+                            log.info("msg offset:{}", record.offset());
+                            log.info("Thread {} receive msg, the value is :{}", Thread.currentThread().getName(), record.value());
                         }
                         // auto.commit.offset设置false
                         kafkaConsumer.commitAsync();
@@ -118,18 +115,16 @@ public class KafkaOriginalConsumer {
 //                        Thread.sleep(1000);
 //                    } catch (InterruptedException e) {
 //                        Thread.currentThread().interrupt();
-//                        logger.warn("consumer thread is interrupted..", e);
+//                        log.warn("consumer thread is interrupted..", e);
 //                    }
                 }
             } catch (Exception e) {
-                logger.error("some error occurred", e);
+                log.error("some error occurred", e);
             } finally {
                 kafkaConsumer.close(Duration.ofMillis(500));
                 shutdownGracefully();
             }
         });
-
-        t.setDaemon(false);
 
         t.start();
 
@@ -137,15 +132,21 @@ public class KafkaOriginalConsumer {
 //            TimeUnit.SECONDS.sleep(3);
 //            t.interrupt();
 //        } catch (InterruptedException e) {
-//            logger.error("some error occurred", e);
+//            log.error("some error occurred", e);
 //        }
+
+        try {
+            t.join();
+        } catch (InterruptedException e) {
+            log.error("error occurred.", e);
+        }
     }
 
     public void shutdownGracefully() {
         // jvm退出之前执行
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             kafkaConsumer.wakeup();
-            logger.warn("consumer is closed gracefully.");
+            log.warn("consumer is closed gracefully.");
         }));
 
     }

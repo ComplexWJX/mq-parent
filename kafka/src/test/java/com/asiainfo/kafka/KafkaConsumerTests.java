@@ -19,14 +19,19 @@ import java.util.Properties;
 class KafkaConsumerTests {
 
     @Test
+    public void testLog() {
+        new LogbackFoo().logInfo("tom");
+    }
+
+    @Test
     public void testPollMsg() {
         KafkaOriginalConsumer c1 = new KafkaOriginalConsumer("MyGroup");
-        KafkaOriginalConsumer c2 = new KafkaOriginalConsumer("MyGroup");
-
         c1.assign("order", 0);
-        c2.assign("order", 0);
         c1.pollMsg();
-        c2.pollMsg();
+
+//        KafkaOriginalConsumer c2 = new KafkaOriginalConsumer("MyGroup");
+//        c2.assign("order", 0);
+//        c2.pollMsg();
 
     }
 
@@ -48,7 +53,7 @@ class KafkaConsumerTests {
         String topic = "order";
         //指定从offset==0开始消费
         int offset = 0;
-        int partition = 1;
+        int partition = 0;
         TopicPartition topicPartition = new TopicPartition(topic, partition);
         /*
          * 1.standalone consumer:指consumer.assign()而非consumer.subscribe()的消费者
