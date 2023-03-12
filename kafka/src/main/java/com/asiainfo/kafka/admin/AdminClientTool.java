@@ -38,10 +38,12 @@ public class AdminClientTool {
         try {
             result.all().get();
         } catch (InterruptedException | ExecutionException e) {
-            System.out.println(String.format("create topic %s failed.", topicName));
+            e.printStackTrace();
+            System.out.printf("create topic %s failed.%n", topicName);
+            return;
         }
 
-        System.out.println(String.format("create topic %s success.", topicName));
+        System.out.printf("create topic %s success.%n", topicName);
     }
 
     public static void deleteTopic(String topicName) {
@@ -63,10 +65,12 @@ public class AdminClientTool {
         try {
             result.all().get();
         } catch (InterruptedException | ExecutionException e) {
-            System.out.println(String.format("delete topic %s failed.", topicName));
+            e.printStackTrace();
+            System.out.printf("delete topic %s failed.%n", topicName);
+            return;
         }
 
-        System.out.println(String.format("delete topic %s success.", topicName));
+        System.out.printf("delete topic %s success.%n", topicName);
     }
 
     public static Collection<TopicListing> listTopics() {

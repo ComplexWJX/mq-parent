@@ -20,17 +20,19 @@ import java.util.concurrent.Future;
 @Slf4j
 public class MyKafkaProducer {
 
-    private Properties properties = new Properties();
+    public final static String BOOTSTRAP_SERVERS = "localhost:9092,localhost:9093,localhost:9094";
+
+    private final Properties properties = new Properties();
 
     public MyKafkaProducer() {
 
-        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "");
+        properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
 
-        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "");
+        properties.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
 
-        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "1");
+        properties.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
 
-        properties.put(ProducerConfig.ACKS_CONFIG, 1);
+        properties.put(ProducerConfig.ACKS_CONFIG, "all");
 
         properties.put(ProducerConfig.RETRIES_CONFIG, 3);
     }
@@ -58,7 +60,7 @@ public class MyKafkaProducer {
 
         KafkaProducer<String, Object> kafkaProducer = new KafkaProducer<>(properties);
 
-        ProducerRecord<String, Object> producerRecord = new ProducerRecord<>(topic, partition);
+        ProducerRecord<String, Object> producerRecord = new ProducerRecord<>(topic, partition, "order-mxbc", "order2023031201");
         Future<RecordMetadata> future = kafkaProducer.send(producerRecord);
 
         try {

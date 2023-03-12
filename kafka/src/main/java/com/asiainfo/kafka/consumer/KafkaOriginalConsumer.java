@@ -62,10 +62,6 @@ public class KafkaOriginalConsumer {
 
         this.kafkaConsumer = new KafkaConsumer<>(properties);
 
-        if (null == properties.get(ConsumerConfig.GROUP_ID_CONFIG)) {
-            subscribe();
-        }
-
     }
 
     public void subscribe() {
@@ -113,7 +109,7 @@ public class KafkaOriginalConsumer {
                         for (ConsumerRecord<String, Object> record : consumerRecords) {
                             // todo
                             logger.info("msg offset:{}", record.offset());
-                            logger.info("receive msg, the value is :{}", record.value());
+                            logger.info("Thread {} receive msg, the value is :{}", Thread.currentThread().getName(), record.value());
                         }
                         // auto.commit.offset设置false
                         kafkaConsumer.commitAsync();
@@ -132,6 +128,8 @@ public class KafkaOriginalConsumer {
                 shutdownGracefully();
             }
         });
+
+        t.setDaemon(false);
 
         t.start();
 
