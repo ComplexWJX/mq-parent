@@ -34,7 +34,7 @@
         <appender-ref ref="file" />
     </root>-->
 
-    <logger name="com.asiainfo.kafka" level="info"  additivity="false">
+    <logger name="com.jaxon.kafka" level="info" additivity="false">
         <appender-ref ref="console" />
     </logger>
 

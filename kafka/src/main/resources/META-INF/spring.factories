@@ -1,2 +1,2 @@
 #org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-#com.asiainfo.kafka.consumer.KafkaOriginalConsumer
+#com.jaxon.kafka.consumer.KafkaOriginalConsumer

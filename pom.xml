@@ -13,7 +13,7 @@
         <version>2.7.0</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.asiainfo</groupId>
+    <groupId>com.jaxon</groupId>
     <artifactId>mq-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>mq-parent</name>
